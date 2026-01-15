@@ -1,0 +1,359 @@
+/* Variables for easy theme adjustments */
+:root {
+    --primary-blue: #0081fb; 
+    --dark-bg: #0a0a0b;
+    --card-bg: #161618;
+    --text-light: #ffffff;
+    --text-dim: #a1a1a6;
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Layout Containers */
+.container {
+    padding: 80px 10%;
+}
+.about-grid {
+    display: flexbox;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    justify-content: center;
+    border: solid white 2px;
+}
+/* Hero Section */
+.hero {
+    position: relative;
+    height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                url('assets/ARtificial_Intelligence_Hero.png') center/cover no-repeat;
+}
+
+.app-icon {
+    width: 120px;
+    height: 120px;
+    border-radius: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.hero h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: -2px;
+    margin-bottom: 1rem;
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--card-bg);
+    color: white;
+    padding: 18px 45px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 30px;
+    transition: var(--transition);
+}
+button:hover {
+    background: var(--primary-blue);
+    transition: var(--transition);
+}
+.cta-button:hover {
+    background: var(--primary-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 129, 251, 0.4);
+}
+button {
+    display: inline-block;
+    outline: none;
+    position: relative;
+    background: var(--card-bg);
+    color: var(--text-light);
+    text-decoration: none;
+    border-radius: 99px;
+    padding: 12px 30px;
+    font-weight: 600;
+    cursor: pointer;
+    line-height: 18px;
+    border: solid 1px var(--card-bg);
+}
+
+/* Feature Grid */
+.features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 40px 10%;
+    margin-top: -20rem;
+}
+
+.feature-card {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 20px;
+    border: 1px solid #222;
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    border-color: var(--primary-blue);
+}
+
+/* General Styling */
+.responsive-img {
+    width: 100%;
+    border-radius: 15px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.legal-section {
+    background: #000;
+    padding: 60px 10%;
+    color: var(--text-dim);
+    border-top: 1px solid #222;
+}
+
+footer {
+    padding: 40px;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #444;
+}
+
+
+.text-block {
+    font-size: 1rem;
+    color: var(--text-dim);
+    border: solid white 2px;
+}
+.gallery {
+    padding-top: 100%;
+    margin-top: 10%;
+    margin-bottom: 50%;
+	width: 100%;
+	height: 60%;
+	overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.gallery::-webkit-scrollbar {
+    display: none;
+}
+
+.gallery-container{
+    height: 200vh;
+}
+.cards {
+	position: absolute;
+	width: 14rem;
+	height: 18rem;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.cards li{
+    list-style: none;
+	padding: 0;
+	margin: 0;
+	width: 14rem;
+	height: 20.1rem;
+	text-align: center;
+	line-height: 1.5rem;
+	font-size: .9rem;
+	position: absolute;
+	top: 0;
+	left: 0;
+	border-radius: 0.8rem;
+}
+
+.cards li img {
+    width: 100%;
+    height: 16.2rem;
+    border-radius: 0.8rem;
+    object-fit: cover;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.actions {
+	position: absolute;
+    left: 50%;
+    top: 55%;
+    width: 100%;
+    border: solid 1px white;
+	transform: translateX(-50%);
+}
+
+#prev-btn {
+    position: absolute;
+    left: 25%;
+}
+#next-btn {
+    position: absolute;
+    right: 25%;
+}
+
+section{
+    position: relative;
+    margin-bottom: 0px;}
+
+/* Responsive Tweak */
+@media (max-width: 768px) {
+    .container {
+        padding: 40px 5%;
+    }
+    .about-grid {
+        display: block;
+    }
+    .hero {
+        height: 70vh;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+        letter-spacing: -1px;
+    }
+    .app-icon {
+        width: 80px;
+        height: 80px;
+    }
+    .features {
+        grid-template-columns: 1fr;
+        padding: 40px 5%;
+        margin-top: 20rem;
+    }
+    .cards {
+        width: 12rem;
+        height: 16rem;
+    }
+    .cards li {
+        width: 12rem;
+        height: 18rem;
+    }
+    .cards li img {
+        height: 14rem;
+    }
+    #prev-btn {
+        left: 10%;
+    }
+    #next-btn {
+        right: 10%;
+    }
+    .legal-section {
+        padding: 40px 5%;
+    }
+@media (max-width: 768px) {
+    .container {
+        padding: 40px 5%;
+    }
+    .about-grid {
+        display: block;
+        height: 60vh;
+    }
+    .hero {
+        height: 70vh;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+        letter-spacing: -1px;
+    }
+    .app-icon {
+        width: 80px;
+        height: 80px;
+    }
+    .features {
+        grid-template-columns: 1fr;
+        padding: 40px 5%;
+        margin-top: 20rem;
+    }
+    .cards {
+        width: 16rem;
+        height: 20rem;
+    }
+    .cards li {
+        width: 16rem;
+        height: 22rem;
+    }
+    .cards li img {
+        height: 18rem;
+    }
+    #prev-btn {
+        left: 10%;
+    }
+    #next-btn {
+        right: 10%;
+    }
+    .legal-section {
+        padding: 40px 5%;
+    }
+    .gallery {
+        position: absolute;
+        margin-top: 10%;
+    }
+
+}
+
+@media (min-width: 1400px) {
+    .container {
+        padding: 80px 15%;
+    }
+    .features {
+        grid-template-columns: repeat(3, 1fr);
+        padding: 40px 15%;
+    }
+    .hero h1 {
+        font-size: 4.5rem;
+    }
+    .legal-section {
+        padding: 60px 15%;
+    }
+    .gallery {
+        margin-top: 5%;
+        margin-bottom: 25%;
+        height: 1vh;
+    }
+    .gallery-container {
+        height: 100vh;
+    }
+}
+
+@media (min-width: 1920px) {
+    .container {
+        padding: 80px 20%;
+    }
+    .features {
+        padding: 40px 20%;
+        gap: 30px;
+    }
+    .hero h1 {
+        font-size: 5rem;
+    }
+    .legal-section {
+        padding: 60px 20%;
+    }
+    .gallery {
+        margin-top: 3%;
+        margin-bottom: 20%;
+    }
+    .gallery-container {
+        height: 80vh;
+    }
+}
+}
