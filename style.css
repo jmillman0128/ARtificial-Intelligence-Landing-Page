@@ -32,7 +32,6 @@ body {
     width: 100%;
     height: 100vh;
     justify-content: center;
-    border: solid white 2px;
 }
 /* Hero Section */
 .hero {
@@ -81,6 +80,10 @@ button:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(0, 129, 251, 0.4);
 }
+
+.actions a:hover {
+    transform: translateX(-115px);
+}
 button {
     display: inline-block;
     outline: none;
@@ -102,7 +105,8 @@ button {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     padding: 40px 10%;
-    margin-top: -20rem;
+    top: -40%;
+    border: solid red 2px;
 }
 
 .feature-card {
@@ -142,16 +146,16 @@ footer {
 .text-block {
     font-size: 1rem;
     color: var(--text-dim);
-    border: solid white 2px;
 }
 .gallery {
     padding-top: 100%;
     margin-top: 10%;
     margin-bottom: 50%;
 	width: 100%;
-	height: 60%;
+    height: max(60%, 30px);
 	overflow-x: hidden;
     overflow-y: scroll;
+    border: solid green 2px;
 }
 
 .gallery::-webkit-scrollbar {
@@ -167,7 +171,7 @@ footer {
 	height: 18rem;
 	top: 40%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 }
 
 .cards li{
@@ -198,7 +202,7 @@ footer {
     left: 50%;
     top: 55%;
     width: 100%;
-    border: solid 1px white;
+    height: 50px;
 	transform: translateX(-50%);
 }
 
@@ -211,9 +215,18 @@ footer {
     right: 25%;
 }
 
+.actions a {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 60px;
+}
+
 section{
     position: relative;
     margin-bottom: 0px;}
+
+
 
 /* Responsive Tweak */
 @media (max-width: 768px) {
@@ -261,18 +274,18 @@ section{
         padding: 40px 5%;
     }
     .gallery {
-        margin-top: 90%;
-        top: 90%;
+        margin-top: 0%;
+
     }
     .gallery-container {
         height: 150vh;
         top: 190%;
     }
     .cards {
-        top: 70%;
+        top: 80%;
     }
     .actions {
-        top: 100%;
+        top: 120%;
     }
 
 }
@@ -298,6 +311,9 @@ section{
     }
     .gallery-container {
         height: 100vh;
+    }
+    .avatar-library {
+        margin-top: 0%;
     }
 }
 

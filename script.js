@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Apply animation style to feature cards and text
     const animateElements = document.querySelectorAll('.feature-card, .text-block');
     animateElements.forEach(el => {
-        el.style.opacity = '1';
+        el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'all 0.6s ease-out';
         observer.observe(el);
