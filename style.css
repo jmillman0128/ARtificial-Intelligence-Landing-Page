@@ -106,7 +106,6 @@ button {
     gap: 20px;
     padding: 40px 10%;
     top: -40%;
-    border: solid red 2px;
 }
 
 .feature-card {
@@ -145,17 +144,16 @@ footer {
 
 .text-block {
     font-size: 1rem;
-    color: var(--text-dim);
+    color: var(--text-dim)
 }
 .gallery {
     padding-top: 100%;
     margin-top: 10%;
     margin-bottom: 50%;
 	width: 100%;
-    height: max(60%, 30px);
+    height: max(20%, 30px);
 	overflow-x: hidden;
     overflow-y: scroll;
-    border: solid green 2px;
 }
 
 .gallery::-webkit-scrollbar {
@@ -226,8 +224,9 @@ section{
     position: relative;
     margin-bottom: 0px;}
 
-
-
+.container p {
+    margin-bottom: 20px; /* Adjust the spacing as needed */
+}
 /* Responsive Tweak */
 @media (max-width: 768px) {
     .container {
@@ -278,7 +277,6 @@ section{
 
     }
     .gallery-container {
-        height: 150vh;
         top: 190%;
     }
     .cards {
@@ -310,10 +308,18 @@ section{
         height: 1vh;
     }
     .gallery-container {
-        height: 100vh;
+        top: 190%;
+        
     }
     .avatar-library {
         margin-top: 0%;
+
+    }
+    .cards {
+        top: 60%;
+    }
+    .actions {
+        top: 75%;
     }
 }
 
@@ -336,7 +342,52 @@ section{
         margin-bottom: 20%;
     }
     .gallery-container {
-        height: 80vh;
+        top: 190%;
+    }
+    .cards {
+        top: 80%;
+    }
+}
+@media (max-height: 600px) {
+    .hero {
+        height: 60vh;
+    }
+    .hero h1 {
+        font-size: 2.5rem;
+    }
+    .app-icon {
+        width: 80px;
+        height: 80px;
+    }
+    .container {
+        padding: 40px 10%;
+    }
+    .cards {
+        top: 50%;
+    }
+    .actions {
+        top: 60%;
+    }
+}
+
+@media (max-height: 800px) {
+    .features {
+        margin-top: 10rem;
+    }
+    .gallery {
+        margin-bottom: 30%;
+    }
+}
+
+@media (min-height: 1080px) {
+    .hero h1 {
+        font-size: 4.5rem;
+    }
+    .about-grid {
+        height: 100vh;
+    }
+    .gallery {
+        margin-bottom: 40%;
     }
 }
 
