@@ -20,6 +20,7 @@ body {
     color: var(--text-light);
     line-height: 1.6;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 /* Layout Containers */
@@ -226,6 +227,11 @@ section{
 
 .container p {
     margin-bottom: 20px; /* Adjust the spacing as needed */
+}
+
+.legal-section a {
+    color: var(--text-light);
+    text-decoration: none;
 }
 /* Responsive Tweak */
 @media (max-width: 768px) {
