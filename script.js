@@ -146,6 +146,102 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         return seamlessLoop;
     }
-    
+
+    // =========================================================================
+    //  Activation Form
+    //  Replace RELAY_URL below with your deployed relay server URL.
+    // =========================================================================
+    const RELAY_URL = 'https://your-relay.example.com';
+
+    const activationForm     = document.getElementById('activationForm');
+    const sessionCodeInput   = document.getElementById('sessionCode');
+    const apiKeyInput        = document.getElementById('apiKey');
+    const toggleKeyBtn       = document.getElementById('toggleKey');
+    const activateBtn        = document.getElementById('activateBtn');
+    const activateBtnLabel   = document.getElementById('activateBtnLabel');
+    const activateBtnSpinner = document.getElementById('activateBtnSpinner');
+    const activateStatus     = document.getElementById('activateStatus');
+
+    if (toggleKeyBtn) {
+        toggleKeyBtn.addEventListener('click', () => {
+            const visible = apiKeyInput.type === 'text';
+            apiKeyInput.type = visible ? 'password' : 'text';
+            toggleKeyBtn.textContent = visible ? 'Show' : 'Hide';
+        });
+    }
+
+    if (sessionCodeInput) {
+        sessionCodeInput.addEventListener('input', () => {
+            sessionCodeInput.value = sessionCodeInput.value.replace(/\D/g, '').slice(0, 6);
+        });
+    }
+
+    if (activationForm) {
+        activationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearActivateStatus();
+
+            const code   = sessionCodeInput.value.trim();
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!/^\d{6}$/.test(code)) {
+                showActivateStatus('Please enter the 6-digit code shown in your headset.', 'error');
+                sessionCodeInput.focus();
+                return;
+            }
+            if (!apiKey || apiKey.length < 10) {
+                showActivateStatus('Please enter a valid API key.', 'error');
+                apiKeyInput.focus();
+                return;
+            }
+
+            setActivateLoading(true);
+            try {
+                const response = await fetch(`${RELAY_URL}/api/submit-key`, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ code, apiKey }),
+                });
+
+                let data;
+                try { data = await response.json(); } catch { data = {}; }
+
+                if (response.ok) {
+                    showActivateStatus(
+                        'Key sent! Put on your headset \u2014 the experience should start in a few seconds.',
+                        'success'
+                    );
+                    activationForm.reset();
+                } else if (response.status === 429) {
+                    showActivateStatus('Too many attempts. Please wait a moment and try again.', 'error');
+                } else {
+                    showActivateStatus(data.error || 'Something went wrong. Please try again.', 'error');
+                }
+            } catch {
+                showActivateStatus(
+                    'Could not reach the activation server. Check your internet connection and try again.',
+                    'error'
+                );
+            } finally {
+                setActivateLoading(false);
+            }
+        });
+    }
+
+    function setActivateLoading(loading) {
+        activateBtn.disabled = loading;
+        activateBtnLabel.classList.toggle('hidden', loading);
+        activateBtnSpinner.classList.toggle('hidden', !loading);
+    }
+
+    function showActivateStatus(message, type) {
+        activateStatus.textContent = message;
+        activateStatus.className   = `activate-status ${type}`;
+    }
+
+    function clearActivateStatus() {
+        activateStatus.textContent = '';
+        activateStatus.className   = 'activate-status hidden';
+    }
 
 });

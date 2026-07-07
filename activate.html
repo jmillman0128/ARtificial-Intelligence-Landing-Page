@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activate Your Experience | ARtificial Intelligence</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        .activate-hero {
+            padding: 80px 10% 60px;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)),
+                        url('Assets/ARtificial_Intelligence_Hero.png') center/cover no-repeat;
+        }
+        .activate-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+        .activate-hero p {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+        .activate-page-body {
+            padding: 60px 10%;
+        }
+        .key-type-badge {
+            margin-top: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.2s;
+        }
+        .key-type-badge.hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="site-nav">
+        <a href="index.html" class="nav-brand">A.R.tificial Intelligence</a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="activate.html" class="nav-activate">Activate</a></li>
+            <li><a href="privacy-policy.html">Privacy</a></li>
+        </ul>
+    </nav>
+
+    <div class="activate-hero">
+        <a href="index.html" style="display:inline-block; margin-bottom:25px; color:var(--primary-blue); text-decoration:none; font-weight:600; font-size:0.9rem; transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">← Back to Home</a>
+        <h1>Activate Your Experience</h1>
+        <p>Link your OpenAI API key to your headset in seconds.</p>
+    </div>
+
+    <main class="activate-page-body">
+        <div class="activate-container">
+
+            <div class="activate-card">
+                <ol class="activate-steps">
+                    <li>Put on your headset and find the <strong>6-digit code</strong> shown on screen</li>
+                    <li>Get your <strong>OpenAI API key</strong> from <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">platform.openai.com</a></li>
+                    <li>Enter both below — your VR experience will start <strong>automatically</strong></li>
+                </ol>
+
+                <form id="activationForm" novalidate>
+                    <div class="activate-field">
+                        <label for="sessionCode">Headset Code</label>
+                        <input
+                            type="text"
+                            id="sessionCode"
+                            inputmode="numeric"
+                            pattern="\d{6}"
+                            maxlength="6"
+                            placeholder="_ _ _ _ _ _"
+                            autocomplete="off"
+                            spellcheck="false"
+                            required
+                        >
+                    </div>
+                    <div class="activate-field">
+                        <label for="apiKey">API Key</label>
+                        <div class="key-row">
+                            <input
+                                type="password"
+                                id="apiKey"
+                                placeholder="sk-... · AIza... · ElevenLabs hex"
+                                autocomplete="off"
+                                spellcheck="false"
+                                required
+                            >
+                            <button type="button" id="toggleKey" aria-label="Show or hide API key">Show</button>
+                        </div>
+                        <div id="keyTypeBadge" class="key-type-badge hidden"></div>
+                    </div>
+                    <button type="submit" id="activateBtn">
+                        <span id="activateBtnLabel">Activate Experience</span>
+                        <span id="activateBtnSpinner" class="activate-spinner hidden" aria-hidden="true"></span>
+                    </button>
+                </form>
+
+                <div id="activateStatus" class="activate-status hidden" role="alert" aria-live="polite"></div>
+            </div>
+
+            <details class="activate-faq">
+                <summary>Where do I get an OpenAI API key?</summary>
+                <div class="activate-faq-body">
+                    <p>Create a free account at <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">platform.openai.com</a>, go to <strong>API Keys</strong> in the sidebar, and click <strong>+ Create new secret key</strong>. Your key starts with <code>sk-</code>.</p>
+                    <p>For <strong>Google TTS</strong> keys (starts with <code>AIza</code>), visit <a href="https://console.cloud.google.com" target="_blank" rel="noopener noreferrer">console.cloud.google.com</a> and enable the Text-to-Speech API.</p>
+                    <p>For <strong>ElevenLabs</strong> keys (32-character hex), find yours at <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer">elevenlabs.io</a> under Profile &rarr; API Key.</p>
+                    <p class="activate-note">Your key is sent directly to your headset over an encrypted connection. It is never stored on this website or any server.</p>
+                </div>
+            </details>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Jmillman Inc. Meta Quest is a trademark of Meta Platforms, Inc.</p>
+        <p style="margin-top:10px;"><a href="privacy-policy.html" style="color:#555;text-decoration:none;font-size:0.8rem;transition:color 0.3s ease;" onmouseover="this.style.color='#0081fb'" onmouseout="this.style.color='#555'">Privacy Policy</a></p>
+    </footer>
+
+    <script>
+        'use strict';
+
+        // Replace with your deployed relay server URL after running: npm install && node server.js
+        const RELAY_URL = 'https://artificial-intelligence-s3yz.onrender.com';
+
+        const activationForm     = document.getElementById('activationForm');
+        const sessionCodeInput   = document.getElementById('sessionCode');
+        const apiKeyInput        = document.getElementById('apiKey');
+        const toggleKeyBtn       = document.getElementById('toggleKey');
+        const activateBtn        = document.getElementById('activateBtn');
+        const activateBtnLabel   = document.getElementById('activateBtnLabel');
+        const activateBtnSpinner = document.getElementById('activateBtnSpinner');
+        const activateStatus     = document.getElementById('activateStatus');
+        const keyTypeBadge       = document.getElementById('keyTypeBadge');
+
+        // Key type detection — mirrors the logic in KeySessionManager.DetectKeyType()
+        function detectKeyType(key) {
+            if (!key) return null;
+            if (key.startsWith('sk-'))                         return { label: 'OpenAI',     color: '#22c55e' };
+            if (key.startsWith('AIza') && key.length >= 35)    return { label: 'Google TTS', color: '#3b82f6' };
+            if (/^[a-f0-9]{32}$/.test(key))                    return { label: 'ElevenLabs', color: '#a855f7' };
+            return { label: 'Unknown format', color: '#f59e0b' };
+        }
+
+        apiKeyInput.addEventListener('input', () => {
+            const key  = apiKeyInput.value.trim();
+            const type = detectKeyType(key);
+            if (type && key.length > 5) {
+                keyTypeBadge.textContent = '\u2713 ' + type.label + ' key detected';
+                keyTypeBadge.style.color  = type.color;
+                keyTypeBadge.classList.remove('hidden');
+            } else {
+                keyTypeBadge.classList.add('hidden');
+            }
+        });
+
+        toggleKeyBtn.addEventListener('click', () => {
+            const visible = apiKeyInput.type === 'text';
+            apiKeyInput.type = visible ? 'password' : 'text';
+            toggleKeyBtn.textContent = visible ? 'Show' : 'Hide';
+        });
+
+        sessionCodeInput.addEventListener('input', () => {
+            sessionCodeInput.value = sessionCodeInput.value.replace(/\D/g, '').slice(0, 6);
+        });
+
+        activationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearStatus();
+
+            const code   = sessionCodeInput.value.trim();
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!/^\d{6}$/.test(code)) {
+                showStatus('Please enter the 6-digit code shown in your headset.', 'error');
+                sessionCodeInput.focus();
+                return;
+            }
+            if (!apiKey || apiKey.length < 10) {
+                showStatus('Please enter a valid API key.', 'error');
+                apiKeyInput.focus();
+                return;
+            }
+
+            setLoading(true);
+            try {
+                const response = await fetch(`${RELAY_URL}/api/submit-key`, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({ code, apiKey }),
+                });
+
+                let data;
+                try { data = await response.json(); } catch { data = {}; }
+
+                if (response.ok) {
+                    showStatus(
+                        'Key sent! Put on your headset \u2014 the experience should start in a few seconds.',
+                        'success'
+                    );
+                    activationForm.reset();
+                } else if (response.status === 429) {
+                    showStatus('Too many attempts. Please wait a moment and try again.', 'error');
+                } else {
+                    showStatus(data.error || 'Something went wrong. Please try again.', 'error');
+                }
+            } catch {
+                showStatus(
+                    'Could not reach the activation server. Check your internet connection and try again.',
+                    'error'
+                );
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        function setLoading(loading) {
+            activateBtn.disabled = loading;
+            activateBtnLabel.classList.toggle('hidden', loading);
+            activateBtnSpinner.classList.toggle('hidden', !loading);
+        }
+
+        function showStatus(message, type) {
+            activateStatus.textContent = message;
+            activateStatus.className   = `activate-status ${type}`;
+        }
+
+        function clearStatus() {
+            activateStatus.textContent = '';
+            activateStatus.className   = 'activate-status hidden';
+        }
+    </script>
+</body>
+</html>
