@@ -34,6 +34,12 @@
             transition: opacity 0.2s;
         }
         .key-type-badge.hidden { display: none; }
+        .activate-field .key-optional {
+            font-size: 0.78rem;
+            font-weight: 400;
+            color: var(--text-dim);
+            margin-left: 6px;
+        }
     </style>
 </head>
 <body>
@@ -60,7 +66,7 @@
                 <ol class="activate-steps">
                     <li>Put on your headset and find the <strong>6-digit code</strong> shown on screen</li>
                     <li>Get your <strong>OpenAI API key</strong> from <a href="https://platform.openai.com" target="_blank" rel="noopener noreferrer">platform.openai.com</a></li>
-                    <li>Enter both below — your VR experience will start <strong>automatically</strong></li>
+                    <li>Enter the code and your key(s) below — your VR experience will start <strong>automatically</strong></li>
                 </ol>
 
                 <form id="activationForm" novalidate>
@@ -79,19 +85,44 @@
                         >
                     </div>
                     <div class="activate-field">
-                        <label for="apiKey">API Key</label>
+                        <label for="openaiKey">OpenAI API Key</label>
                         <div class="key-row">
                             <input
                                 type="password"
-                                id="apiKey"
-                                placeholder="sk-... · AIza... · ElevenLabs hex"
+                                id="openaiKey"
+                                placeholder="sk-..."
                                 autocomplete="off"
                                 spellcheck="false"
                                 required
                             >
-                            <button type="button" id="toggleKey" aria-label="Show or hide API key">Show</button>
+                            <button type="button" class="toggleKey" data-target="openaiKey" aria-label="Show or hide OpenAI key">Show</button>
                         </div>
-                        <div id="keyTypeBadge" class="key-type-badge hidden"></div>
+                    </div>
+                    <div class="activate-field">
+                        <label for="googleKey">Google TTS Key <span class="key-optional">(optional)</span></label>
+                        <div class="key-row">
+                            <input
+                                type="password"
+                                id="googleKey"
+                                placeholder="AIza..."
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                            <button type="button" class="toggleKey" data-target="googleKey" aria-label="Show or hide Google TTS key">Show</button>
+                        </div>
+                    </div>
+                    <div class="activate-field">
+                        <label for="elevenLabsKey">ElevenLabs Key <span class="key-optional">(optional)</span></label>
+                        <div class="key-row">
+                            <input
+                                type="password"
+                                id="elevenLabsKey"
+                                placeholder="32-character hex"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+                            <button type="button" class="toggleKey" data-target="elevenLabsKey" aria-label="Show or hide ElevenLabs key">Show</button>
+                        </div>
                     </div>
                     <button type="submit" id="activateBtn">
                         <span id="activateBtnLabel">Activate Experience</span>
@@ -128,41 +159,25 @@
 
         const activationForm     = document.getElementById('activationForm');
         const sessionCodeInput   = document.getElementById('sessionCode');
-        const apiKeyInput        = document.getElementById('apiKey');
-        const toggleKeyBtn       = document.getElementById('toggleKey');
+        const openaiKeyInput     = document.getElementById('openaiKey');
+        const googleKeyInput     = document.getElementById('googleKey');
+        const elevenLabsKeyInput = document.getElementById('elevenLabsKey');
         const activateBtn        = document.getElementById('activateBtn');
         const activateBtnLabel   = document.getElementById('activateBtnLabel');
         const activateBtnSpinner = document.getElementById('activateBtnSpinner');
         const activateStatus     = document.getElementById('activateStatus');
-        const keyTypeBadge       = document.getElementById('keyTypeBadge');
 
-        // Key type detection — mirrors the logic in KeySessionManager.DetectKeyType()
-        function detectKeyType(key) {
-            if (!key) return null;
-            if (key.startsWith('sk-'))                         return { label: 'OpenAI',     color: '#22c55e' };
-            if (key.startsWith('AIza') && key.length >= 35)    return { label: 'Google TTS', color: '#3b82f6' };
-            if (/^[a-f0-9]{32}$/.test(key))                    return { label: 'ElevenLabs', color: '#a855f7' };
-            return { label: 'Unknown format', color: '#f59e0b' };
-        }
-
-        apiKeyInput.addEventListener('input', () => {
-            const key  = apiKeyInput.value.trim();
-            const type = detectKeyType(key);
-            if (type && key.length > 5) {
-                keyTypeBadge.textContent = '\u2713 ' + type.label + ' key detected';
-                keyTypeBadge.style.color  = type.color;
-                keyTypeBadge.classList.remove('hidden');
-            } else {
-                keyTypeBadge.classList.add('hidden');
-            }
+        // Show/Hide toggles for each key field
+        document.querySelectorAll('.toggleKey').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const input = document.getElementById(btn.dataset.target);
+                const visible = input.type === 'text';
+                input.type = visible ? 'password' : 'text';
+                btn.textContent = visible ? 'Show' : 'Hide';
+            });
         });
 
-        toggleKeyBtn.addEventListener('click', () => {
-            const visible = apiKeyInput.type === 'text';
-            apiKeyInput.type = visible ? 'password' : 'text';
-            toggleKeyBtn.textContent = visible ? 'Show' : 'Hide';
-        });
-
+        // Enforce numeric-only input for headset code
         sessionCodeInput.addEventListener('input', () => {
             sessionCodeInput.value = sessionCodeInput.value.replace(/\D/g, '').slice(0, 6);
         });
@@ -171,17 +186,19 @@
             e.preventDefault();
             clearStatus();
 
-            const code   = sessionCodeInput.value.trim();
-            const apiKey = apiKeyInput.value.trim();
+            const code         = sessionCodeInput.value.trim();
+            const openaiKey    = openaiKeyInput.value.trim();
+            const googleKey    = googleKeyInput.value.trim();
+            const elevenLabsKey = elevenLabsKeyInput.value.trim();
 
             if (!/^\d{6}$/.test(code)) {
                 showStatus('Please enter the 6-digit code shown in your headset.', 'error');
                 sessionCodeInput.focus();
                 return;
             }
-            if (!apiKey || apiKey.length < 10) {
-                showStatus('Please enter a valid API key.', 'error');
-                apiKeyInput.focus();
+            if (!openaiKey || openaiKey.length < 10) {
+                showStatus('Please enter a valid OpenAI API key.', 'error');
+                openaiKeyInput.focus();
                 return;
             }
 
@@ -190,7 +207,7 @@
                 const response = await fetch(`${RELAY_URL}/api/submit-key`, {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify({ code, apiKey }),
+                    body:    JSON.stringify({ code, openaiKey, googleKey, elevenLabsKey }),
                 });
 
                 let data;
@@ -198,7 +215,7 @@
 
                 if (response.ok) {
                     showStatus(
-                        'Key sent! Put on your headset \u2014 the experience should start in a few seconds.',
+                        'Keys sent! Put on your headset \u2014 the experience should start in a few seconds.',
                         'success'
                     );
                     activationForm.reset();
