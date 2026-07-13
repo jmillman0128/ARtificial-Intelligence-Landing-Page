@@ -151,11 +151,18 @@
         <p style="margin-top:10px;"><a href="privacy-policy.html" style="color:#555;text-decoration:none;font-size:0.8rem;transition:color 0.3s ease;" onmouseover="this.style.color='#0081fb'" onmouseout="this.style.color='#555'">Privacy Policy</a></p>
     </footer>
 
+    <!-- relay-config.js is git-ignored. It sets window.RELAY_URL to the live relay server.
+         In CI/CD (GitHub Actions) this file is generated from the RELAY_URL repo secret.
+         For local development: copy relay-config.example.js to relay-config.js and fill in your URL. -->
+    <script src="relay-config.js"></script>
     <script>
         'use strict';
 
-        // Replace with your deployed relay server URL after running: npm install && node server.js
-        const RELAY_URL = 'https://your-relay.example.com';
+        // Read the relay URL injected by relay-config.js (git-ignored).
+        // Falls back to an empty string so the form fails gracefully if the file is absent.
+        const RELAY_URL = (typeof window.RELAY_URL === 'string' && window.RELAY_URL.length > 0)
+            ? window.RELAY_URL
+            : '';
 
         const activationForm     = document.getElementById('activationForm');
         const sessionCodeInput   = document.getElementById('sessionCode');

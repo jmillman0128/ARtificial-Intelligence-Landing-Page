@@ -1,0 +1,4 @@
+# Relay server URL — contains the live endpoint, must not be committed.
+# Copy relay-config.example.js to relay-config.js and set your real URL.
+# In CI/CD this file is generated from the RELAY_URL repository secret.
+relay-config.js
