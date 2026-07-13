@@ -217,8 +217,12 @@
                     body:    JSON.stringify({ code, openaiKey, googleKey, elevenLabsKey }),
                 });
 
-                let data;
-                try { data = await response.json(); } catch { data = {}; }
+                let data = {};
+                let rawText = '';
+                try {
+                    rawText = await response.text();
+                    try { data = JSON.parse(rawText); } catch { /* non-JSON body */ }
+                } catch { /* network read error */ }
 
                 if (response.ok) {
                     showStatus(
@@ -229,7 +233,8 @@
                 } else if (response.status === 429) {
                     showStatus('Too many attempts. Please wait a moment and try again.', 'error');
                 } else {
-                    showStatus(data.error || 'Something went wrong. Please try again.', 'error');
+                    const detail = data.error || rawText.slice(0, 200) || 'No response body';
+                    showStatus(`Server error ${response.status}: ${detail}`, 'error');
                 }
             } catch {
                 showStatus(
