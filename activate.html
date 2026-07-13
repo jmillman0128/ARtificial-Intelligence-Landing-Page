@@ -158,11 +158,11 @@
     <script>
         'use strict';
 
-        // Read the relay URL injected by relay-config.js (git-ignored).
-        // Falls back to an empty string so the form fails gracefully if the file is absent.
+        // Read the relay URL injected by relay-config.js (local dev) or
+        // stamped directly into this file by the CI/CD workflow (production).
         const RELAY_URL = (typeof window.RELAY_URL === 'string' && window.RELAY_URL.length > 0)
             ? window.RELAY_URL
-            : '';
+            : '__RELAY_URL_PLACEHOLDER__';
 
         const activationForm     = document.getElementById('activationForm');
         const sessionCodeInput   = document.getElementById('sessionCode');

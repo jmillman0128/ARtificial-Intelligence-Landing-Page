@@ -24,12 +24,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Creates relay-config.js from the RELAY_URL repository secret.
+      # Injects the relay server URL from the RELAY_URL repository secret.
       # Add RELAY_URL under: Settings > Secrets and variables > Actions > New repository secret
+      # The URL is written into two places:
+      #   1. relay-config.js  — loaded at runtime (may be excluded by upload-pages-artifact)
+      #   2. activate.html    — sed replaces the placeholder directly in the source file
       - name: Inject relay URL
         env:
           RELAY_URL: ${{ secrets.RELAY_URL }}
-        run: printf 'window.RELAY_URL = "%s";\n' "$RELAY_URL" > relay-config.js
+        run: |
+          if [ -z "$RELAY_URL" ]; then
+            echo "ERROR: RELAY_URL secret is not set. Add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          printf 'window.RELAY_URL = "%s";\n' "$RELAY_URL" > relay-config.js
+          sed -i "s|__RELAY_URL_PLACEHOLDER__|$RELAY_URL|g" activate.html
+          echo "Injected relay URL into relay-config.js and activate.html"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
