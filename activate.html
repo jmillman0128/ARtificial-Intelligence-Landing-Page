@@ -154,15 +154,12 @@
     <!-- relay-config.js is git-ignored. It sets window.RELAY_URL to the live relay server.
          In CI/CD (GitHub Actions) this file is generated from the RELAY_URL repo secret.
          For local development: copy relay-config.example.js to relay-config.js and fill in your URL. -->
-    <script src="relay-config.js"></script>
     <script>
         'use strict';
 
-        // Read the relay URL injected by relay-config.js (local dev) or
-        // stamped directly into this file by the CI/CD workflow (production).
-        const RELAY_URL = (typeof window.RELAY_URL === 'string' && window.RELAY_URL.length > 0)
-            ? window.RELAY_URL
-            : '__RELAY_URL_PLACEHOLDER__';
+        // Relay server URL — not a secret (visible in page source like any JS).
+        // Update this if the Render service URL changes.
+        const RELAY_URL = 'https://artificial-intelligence-s3yz.onrender.com';
 
         const activationForm     = document.getElementById('activationForm');
         const sessionCodeInput   = document.getElementById('sessionCode');

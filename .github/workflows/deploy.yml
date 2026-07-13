@@ -24,23 +24,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Injects the relay server URL from the RELAY_URL repository secret.
-      # Add RELAY_URL under: Settings > Secrets and variables > Actions > New repository secret
-      # The URL is written into two places:
-      #   1. relay-config.js  — loaded at runtime (may be excluded by upload-pages-artifact)
-      #   2. activate.html    — sed replaces the placeholder directly in the source file
-      - name: Inject relay URL
-        env:
-          RELAY_URL: ${{ secrets.RELAY_URL }}
-        run: |
-          if [ -z "$RELAY_URL" ]; then
-            echo "ERROR: RELAY_URL secret is not set. Add it under Settings > Secrets and variables > Actions."
-            exit 1
-          fi
-          printf 'window.RELAY_URL = "%s";\n' "$RELAY_URL" > relay-config.js
-          sed -i "s|__RELAY_URL_PLACEHOLDER__|$RELAY_URL|g" activate.html
-          echo "Injected relay URL into relay-config.js and activate.html"
-
+      # The relay URL is hardcoded directly in activate.html (it is not sensitive —
+      # it is visible to anyone who views the page source). If the Render service
+      # URL ever changes, update it in activate.html and redeploy.
+      #
+      # RELAY_URL secret is no longer required. Steps below are kept for reference.
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
